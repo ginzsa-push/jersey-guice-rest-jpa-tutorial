@@ -2,12 +2,10 @@ package com.ginzsa.showcase.resources;
 
 import com.ginzsa.showcase.model.Showcase;
 import com.ginzsa.showcase.repo.Dao;
+import com.ginzsa.showcase.repo.ShowcaseDao;
 import com.google.inject.Inject;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -20,10 +18,10 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 @Path("showcase")
 public class ShowcaseResources {
 
-    private Dao<Showcase> showcaseDao;
+    private ShowcaseDao showcaseDao;
 
     @Inject
-    public ShowcaseResources(Dao<Showcase> dao) {
+    public ShowcaseResources(ShowcaseDao dao) {
         this.showcaseDao = dao;
     }
 
@@ -42,5 +40,13 @@ public class ShowcaseResources {
     @Path("{id}")
     public Showcase getById(@PathParam("id") Long id) {
         return showcaseDao.getById(id);
+    }
+
+    @POST
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    public Showcase create(Showcase showcase) {
+        this.showcaseDao.save(showcase);
+        return showcase;
     }
 }

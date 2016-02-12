@@ -9,4 +9,5 @@ public interface Dao<T> {
 
     List<T> getAll();
     T getById(Long id);
+    void save(T t);
 }

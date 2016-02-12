@@ -1,14 +1,20 @@
 package com.ginzsa.showcase.model;
 
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Created by santiago.ginzburg on 2/9/16.
  */
 @XmlRootElement
+@Entity
+@Table( name = "showcase" )
 public class Showcase {
 
+    @Id
+    @GeneratedValue
     private Long id;
+    @Column(name="name")
     private String showCase;
 
     public Showcase() {
