@@ -2,6 +2,7 @@ package com.ginzsa.showcase.model;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 
 /**
  * Created by santiago.ginzburg on 2/9/16.
@@ -9,10 +10,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Entity
 @Table( name = "showcase" )
-public class Showcase {
+public class Showcase implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     @Column(name="name")
     private String showCase;

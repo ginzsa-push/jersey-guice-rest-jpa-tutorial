@@ -1,11 +1,14 @@
 package com.ginzsa.showcase;
 
+import com.ginzsa.showcase.config.DataInitializer;
+import com.ginzsa.showcase.config.PersistenceModule;
 import com.ginzsa.showcase.model.Showcase;
 import com.ginzsa.showcase.repo.ShowcaseDao;
 import com.ginzsa.showcase.repo.ShowcaseImplDao;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Provides;
+import com.google.inject.persist.PersistFilter;
+import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.ServletModule;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -24,12 +27,9 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.inject.Singleton;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
@@ -39,6 +39,7 @@ import static org.junit.Assert.*;
 /**
  * Created by santiago.ginzburg on 2/9/16.
  */
+@Ignore
 public class ShowcaseResourcesTest {
 
     static final URI BASE_URI = getBaseURI();
@@ -59,25 +60,20 @@ public class ShowcaseResourcesTest {
 
     private static HttpServer checkServer() throws IOException  {
         if (server == null || !server.isStarted()){
-            Injector injector = Guice.createInjector(new ServletModule() {
-                @Override
-                protected void configureServlets() {
-                    bind(ShowcaseDao.class).to(ShowcaseImplDao.class);
-                }
+            Injector injector = Guice.createInjector( new ServletModule() {
 
-                @Provides
-                @Singleton
-                public EntityManagerFactory entityManagerFactory() {
-                    return Persistence.createEntityManagerFactory("testDB");
-                }
+                        @Override
+                        protected void configureServlets() {
+                            bind(ShowcaseDao.class).to(ShowcaseImplDao.class);
+                            install(new PersistenceModule());
+                            install(new JpaPersistModule("testDB"));
+                            filter("/*").through(PersistFilter.class);
 
-                @Provides
-                @Singleton
-                public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
-                    return entityManagerFactory.createEntityManager();
-                }
-            });
+                            //bind(DataInitializer.class);
+                        }
+                    });
 
+            //injector.getInstance(DataInitializer.class).run();
             ResourceConfig rc = new PackagesResourceConfig( "com.ginzsa.showcase.resources" );
 
             rc.getFeatures().put("com.sun.jersey.api.json.POJOMappingFeature", true);

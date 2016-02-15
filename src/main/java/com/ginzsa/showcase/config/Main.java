@@ -6,6 +6,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
+import com.google.inject.persist.PersistFilter;
+import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.sun.jersey.api.core.PackagesResourceConfig;
@@ -32,6 +34,9 @@ public class Main extends GuiceServletContextListener {
             protected void configureServlets() {
 
                 bind(ShowcaseDao.class).to(ShowcaseImplDao.class);
+                install(new JpaPersistModule("testDB"));
+                //install(new PersistenceModule());
+                filter("/*").through(PersistFilter.class);
 
                 ResourceConfig rc = new PackagesResourceConfig( "com.ginzsa.showcase.resources" );
 
@@ -44,17 +49,6 @@ public class Main extends GuiceServletContextListener {
                 serve( "/services/*" ).with(GuiceContainer.class, initParams);
             }
 
-            @Provides
-            @Singleton
-            public EntityManagerFactory entityManagerFactory() {
-                return Persistence.createEntityManagerFactory("testDB");
-            }
-
-            @Provides
-            @Singleton
-            public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
-                return entityManagerFactory.createEntityManager();
-            }
         });
     }
 }

@@ -1,56 +1,48 @@
 package com.ginzsa.showcase.repo;
 
 import com.ginzsa.showcase.model.Showcase;
-import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.persist.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by santiago.ginzburg on 2/9/16.
  */
-public class ShowcaseImplDao implements ShowcaseDao {
+public class ShowcaseImplDao extends AbstractDao<Showcase> implements ShowcaseDao {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-    private EntityTransaction entityTransaction;
+    public ShowcaseImplDao(){
+        super(Showcase.class);
+    }
 
-    @Inject
-    public ShowcaseImplDao(EntityManager entityManager){
-        this.entityManager = entityManager;
-        this.entityTransaction = this.entityManager.getTransaction();
+    public Showcase getByName(String name) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Showcase> cq = cb.createQuery(Showcase.class);
+        Root<Showcase> showcaseRoot = cq.from(Showcase.class);
+
+        Predicate cond1 = cb.equal(showcaseRoot.get("name"), name);
+        cq.where(cond1);
+
+        return getEntityManager().createQuery(cq).getSingleResult();
     }
 
     @Override
     public List<Showcase> getAll() {
-        TypedQuery<Showcase> query = entityManager.createQuery("from com.ginzsa.showcase.model.Showcase", Showcase.class);
-        entityTransaction.begin();
-        List<Showcase> list = query.getResultList();
-        entityTransaction.commit();
-        return list;
+        return super.findAll();
     }
 
     @Override
     public Showcase getById(Long id) {
-
-        entityTransaction.begin();
-        List<Showcase> list  = entityManager
-                .createQuery("from com.ginzsa.showcase.model.Showcase s where s.id = :id", Showcase.class)
-                .setParameter("id", id)
-                .getResultList();
-
-        entityTransaction.commit();
-        return list.isEmpty()? null: list.get(0);
+        return super.find(id);
     }
 
     @Override
+    @Transactional
     public void save(Showcase showcase) {
-        entityTransaction.begin();
-        entityManager.persist(showcase);
-        entityTransaction.commit();
+       super.create(showcase);
     }
 }
