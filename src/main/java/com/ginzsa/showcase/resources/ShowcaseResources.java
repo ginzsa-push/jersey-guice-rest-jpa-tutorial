@@ -1,7 +1,6 @@
 package com.ginzsa.showcase.resources;
 
 import com.ginzsa.showcase.model.Showcase;
-import com.ginzsa.showcase.repo.Dao;
 import com.ginzsa.showcase.repo.ShowcaseDao;
 import com.google.inject.Inject;
 

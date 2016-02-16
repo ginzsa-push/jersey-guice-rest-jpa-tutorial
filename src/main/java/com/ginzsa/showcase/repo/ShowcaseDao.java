@@ -8,8 +8,4 @@ import java.util.List;
  * Created by santiago.ginzburg on 2/9/16.
  */
 public interface ShowcaseDao extends Dao<Showcase> {
-
-    List<Showcase> getAll();
-    Showcase getById(Long id);
-    void save(Showcase showcase);
 }

@@ -1,7 +1,5 @@
 package com.ginzsa.showcase;
 
-import com.ginzsa.showcase.config.DataInitializer;
-import com.ginzsa.showcase.config.PersistenceModule;
 import com.ginzsa.showcase.model.Showcase;
 import com.ginzsa.showcase.repo.ShowcaseDao;
 import com.ginzsa.showcase.repo.ShowcaseImplDao;
@@ -29,7 +27,6 @@ import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
@@ -65,8 +62,9 @@ public class ShowcaseResourcesTest {
                         @Override
                         protected void configureServlets() {
                             bind(ShowcaseDao.class).to(ShowcaseImplDao.class);
-                            install(new PersistenceModule());
+
                             install(new JpaPersistModule("testDB"));
+                            //install(new PersistenceModule());
                             filter("/*").through(PersistFilter.class);
 
                             //bind(DataInitializer.class);

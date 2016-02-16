@@ -1,6 +1,6 @@
 package com.ginzsa.showcase.repo;
 
-import com.ginzsa.showcase.model.Showcase;
+import com.ginzsa.showcase.model.Employee;
 import com.google.inject.persist.Transactional;
 
 import javax.persistence.Query;
@@ -11,45 +11,45 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 /**
- * Created by santiago.ginzburg on 2/9/16.
+ * Created by santiago.ginzburg on 2/16/16.
  */
-public class ShowcaseImplDao extends AbstractDao<Showcase> implements ShowcaseDao {
+public class EmployeeDaoImpl extends AbstractDao<Employee> implements EmployeeDao {
 
-    public ShowcaseImplDao(){
-        super(Showcase.class);
+    public EmployeeDaoImpl() {
+        super(Employee.class);
     }
 
-    public Showcase getByName(String name) {
+    public Employee getByName(String name) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Showcase> cq = cb.createQuery(Showcase.class);
-        Root<Showcase> showcaseRoot = cq.from(Showcase.class);
+        CriteriaQuery<Employee> cq = cb.createQuery(Employee.class);
+        Root<Employee> employeeRoot = cq.from(Employee.class);
 
-        Predicate cond1 = cb.equal(showcaseRoot.get("name"), name);
+        Predicate cond1 = cb.equal(employeeRoot.get("name"), name);
         cq.where(cond1);
 
         return getEntityManager().createQuery(cq).getSingleResult();
     }
 
     @Override
-    public List<Showcase> getAll() {
+    public List<Employee> getAll() {
         return super.findAll();
     }
 
     @Override
-    public Showcase getById(Long id) {
+    public Employee getById(Long id) {
         return super.find(id);
     }
 
     @Override
     @Transactional
-    public void save(Showcase showcase) {
-       super.create(showcase);
+    public void save(Employee employee) {
+        super.create(employee);
     }
 
     @Override
     @Transactional
-    public void upadate(Showcase showcase) {
-        super.update(showcase);
+    public void upadate(Employee employee) {
+        super.update(employee);
     }
 
     @Override
