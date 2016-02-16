@@ -1,7 +1,6 @@
 package com.ginzsa.showcase.resources;
 
 import com.ginzsa.showcase.model.Department;
-import com.ginzsa.showcase.model.Employee;
 import com.ginzsa.showcase.repo.DepartmentDao;
 import com.google.inject.Inject;
 

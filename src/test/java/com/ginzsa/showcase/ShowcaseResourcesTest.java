@@ -3,10 +3,8 @@ package com.ginzsa.showcase;
 import com.ginzsa.showcase.model.Showcase;
 import com.ginzsa.showcase.repo.*;
 import com.google.inject.Guice;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.persist.PersistFilter;
-import com.google.inject.persist.PersistService;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.ServletModule;
 import com.sun.jersey.api.client.Client;
@@ -23,7 +21,6 @@ import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.ws.rs.core.MediaType;
