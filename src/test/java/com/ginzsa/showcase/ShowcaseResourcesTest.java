@@ -1,11 +1,12 @@
 package com.ginzsa.showcase;
 
 import com.ginzsa.showcase.model.Showcase;
-import com.ginzsa.showcase.repo.ShowcaseDao;
-import com.ginzsa.showcase.repo.ShowcaseImplDao;
+import com.ginzsa.showcase.repo.*;
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.persist.PersistFilter;
+import com.google.inject.persist.PersistService;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.ServletModule;
 import com.sun.jersey.api.client.Client;
@@ -36,7 +37,7 @@ import static org.junit.Assert.*;
 /**
  * Created by santiago.ginzburg on 2/9/16.
  */
-@Ignore
+//@Ignore
 public class ShowcaseResourcesTest {
 
     static final URI BASE_URI = getBaseURI();
@@ -61,17 +62,18 @@ public class ShowcaseResourcesTest {
 
                         @Override
                         protected void configureServlets() {
+
                             bind(ShowcaseDao.class).to(ShowcaseImplDao.class);
+                            bind(DepartmentDao.class).to(DepartmentDaoImpl.class);
+                            bind(EmployeeDao.class).to(EmployeeDaoImpl.class);
 
                             install(new JpaPersistModule("testDB"));
-                            //install(new PersistenceModule());
-                            filter("/*").through(PersistFilter.class);
+                            bind(JPAInitializer.class).asEagerSingleton();
 
-                            //bind(DataInitializer.class);
+                            filter("/*").through(PersistFilter.class);
                         }
                     });
 
-            //injector.getInstance(DataInitializer.class).run();
             ResourceConfig rc = new PackagesResourceConfig( "com.ginzsa.showcase.resources" );
 
             rc.getFeatures().put("com.sun.jersey.api.json.POJOMappingFeature", true);
@@ -163,4 +165,5 @@ public class ShowcaseResourcesTest {
     public void stopServer() {
         server.stop();
     }
+
 }

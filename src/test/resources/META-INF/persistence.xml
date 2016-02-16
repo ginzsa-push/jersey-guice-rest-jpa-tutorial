@@ -5,6 +5,8 @@
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
 
         <class>com.ginzsa.showcase.model.Showcase</class>
+        <class>com.ginzsa.showcase.model.Department</class>
+        <class>com.ginzsa.showcase.model.Employee</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 
         <properties>
